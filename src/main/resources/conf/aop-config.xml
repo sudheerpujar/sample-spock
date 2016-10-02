@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+       <bean id="logging" class="com.hsbc.testing.automation.spock.aop.logging.Logging" factory-method="createLogging" />
+       <aop:aspectj-autoproxy proxy-target-class="true"/>
+       <aop:config>
+              <aop:aspect id="mapperLog" ref="logging">
+                     <aop:pointcut id="mapperLayer" expression="execution(* com.hsbc.testing.automation.spock.data.mapper..*.*(..))"/>
+                     <aop:before method="logEntry" pointcut-ref="mapperLayer" />
+                     <aop:after method="logExit" pointcut-ref="mapperLayer" />
+                     <aop:after-returning method="logReturn" pointcut-ref="mapperLayer" returning="returnValue" />
+                     <aop:after-throwing method="logException" pointcut-ref="mapperLayer" throwing="exception" />
+              </aop:aspect>
+              <aop:aspect id="builderLog" ref="logging">
+                     <aop:pointcut id="builderLayer" expression="execution(* com.hsbc.testing.automation.spock.builder.impl..*.*(..)) || execution(* com.hsbc.testing.automation.spock.data.builder.impl..*.*(..))"/>
+                     <aop:before method="logEntry" pointcut-ref="builderLayer" />
+                     <aop:after method="logExit" pointcut-ref="builderLayer" />
+                     <aop:after-returning method="logReturn" pointcut-ref="builderLayer" returning="returnValue" />
+                     <aop:after-throwing method="logException" pointcut-ref="builderLayer" throwing="exception" />
+              </aop:aspect>
+              <aop:aspect id="daoLog" ref="logging">
+                     <aop:pointcut id="daoLayer" expression="execution(* com.hsbc.testing.automation.spock.data.dao..*.*(..))"/>
+                     <aop:before method="logEntry" pointcut-ref="daoLayer" />
+                     <aop:after method="logExit" pointcut-ref="daoLayer" />
+                     <aop:after-returning method="logReturn" pointcut-ref="daoLayer" returning="returnValue" />
+                     <aop:after-throwing method="logException" pointcut-ref="daoLayer" throwing="exception" />
+              </aop:aspect>
+              <aop:aspect id="serviceLog" ref="logging">
+                     <aop:pointcut id="serviceLayer" expression="execution(* com.hsbc.testing.automation.spock.service..*.*(..))"/>
+                     <aop:before method="logEntry" pointcut-ref="serviceLayer" />
+                     <aop:after method="logExit" pointcut-ref="serviceLayer" />
+                     <aop:after-returning method="logReturn" pointcut-ref="serviceLayer" returning="returnValue" />
+                     <aop:after-throwing method="logException" pointcut-ref="serviceLayer" throwing="exception" />
+              </aop:aspect>
+       </aop:config>
+</beans>
